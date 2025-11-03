@@ -1,0 +1,10 @@
+.avatar{
+    text-align: center;
+    color: azure;
+    background-color: rgb(43, 43, 139);
+    width: 100%;
+}
+
+.name{
+    color: rgb(141, 241, 233);
+}

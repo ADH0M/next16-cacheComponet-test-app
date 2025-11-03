@@ -12,7 +12,6 @@ datasource db {
 
 model Post {
   id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  slug     String    @unique
   title    String
   body     String
   author   User      @relation(fields: [authorId], references: [id])
@@ -27,7 +26,6 @@ model User {
   address  Address?
   posts    Post[]
   password String?
-  // NEW: Link to products they may own/manage (optional)
   products Product[] @relation("OwnerProducts")
 }
 
@@ -50,7 +48,6 @@ type Address {
 
 model Product {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  slug        String   @unique
   name        String
   description String?
   price       Float // in smallest currency unit (e.g., cents) or use Decimal
@@ -74,7 +71,6 @@ model Product {
 model Category {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   name        String    @unique
-  slug        String    @unique
   description String?
   products    Product[]
 }

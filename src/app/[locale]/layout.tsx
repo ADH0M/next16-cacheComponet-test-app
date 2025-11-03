@@ -5,6 +5,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -36,6 +37,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           <NextIntlClientProvider>
             <Navbar />
             <div className="main-page-bg">{children}</div>
+            <Toaster />
           </NextIntlClientProvider>
         </Suspense>
       </body>

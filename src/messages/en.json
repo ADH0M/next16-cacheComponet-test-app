@@ -1,5 +1,39 @@
 {
   "HomePage": {
     "title": "en!"
+  },
+  "ProductPage": {
+    "noImage": "No image available",
+    "outOfStock": "Out of stock",
+    "inStock": "In stock",
+    "tags": "Tags",
+    "category": "Category",
+    "soldBy": "Sold by"
+  },
+  "CreateProductPage": {
+    "title": "Create New Product"
+  },
+  "tost": {
+    "succes": {
+      "createProduct": "create new product successful"
+    },
+    "error": {
+      "createProduct": "faild to create product"
+    },
+    "warn": {
+      "createProduct": "create new product successful"
+    }
+  },
+  "CreateProductForm": {
+    "name": "Name",
+    "description": "Description",
+    "price": "Price (USD)",
+    "stock": "Stock",
+    "category": "Category",
+    "selectCategory": "— Select category —",
+    "mainImageUrl": "Main Image URL",
+    "tags": "Tags (comma-separated)",
+    "tagsPlaceholder": "electronics, gadget, wireless",
+    "createProduct": "Create Product"
   }
 }

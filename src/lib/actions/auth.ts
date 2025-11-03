@@ -84,7 +84,6 @@ export const registerAction = async (
         errors[path as keyof RegisterType] = input.message;
       }
     });
-    console.log(errors);
   }
 
   const errorsKey = Object.keys(errors);

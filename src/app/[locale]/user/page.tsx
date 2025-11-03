@@ -1,16 +1,9 @@
-import { Suspense } from "react";
-import GetUser from "./GetUser";
 
 const page = () => {
   return (
-    <div>
-      <nav>
-        <Suspense fallback={<div>loading</div>}>
-          <GetUser />
-        </Suspense>
-
-
-      </nav>
+    <div className={''}>
+      <p className={'text-shadow btn'}>user content</p>
+      <h1>user</h1>
     </div>
   );
 };

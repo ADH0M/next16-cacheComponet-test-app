@@ -1,5 +1,39 @@
 {
   "HomePage": {
-    "title": "Ar.json !"
+    "title": "مرحباً!"
+  },
+  "ProductPage": {
+    "noImage": "لا توجد صورة متاحة",
+    "outOfStock": "نفدت الكمية",
+    "inStock": "متوفر",
+    "tags": "الوسوم",
+    "category": "التصنيف",
+    "soldBy": "يُباع بواسطة"
+  },
+  "CreateProductPage": {
+    "title": "إنشاء منتج جديد"
+  },
+  "tost": {
+    "succes": {
+      "createProduct": "تم إنشاء المنتج بنجاح"
+    },
+    "error": {
+      "createProduct": "فشل في إنشاء المنتج"
+    },
+    "warn": {
+      "createProduct": "ج "
+    }
+  },
+  "CreateProductForm": {
+    "name": "الاسم",
+    "description": "الوصف",
+    "price": "السعر (USD)",
+    "stock": "المخزون",
+    "category": "التصنيف",
+    "selectCategory": "— اختر التصنيف —",
+    "mainImageUrl": "رابط الصورة الرئيسية",
+    "tags": "الوسوم (مفصولة بفواصل)",
+    "tagsPlaceholder": "إلكترونيات، جهاز، لاسلكي",
+    "createProduct": "إنشاء منتج"
   }
 }

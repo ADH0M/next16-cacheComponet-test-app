@@ -1,17 +1,15 @@
 "use client";
 
 import { Link } from "@/i18n/navigation";
-import { useLocale } from "next-intl";
 import { useState } from "react";
 
 const Navbar = () => {
-  const locale = useLocale();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
-    { label: "Products", href: `/${locale}` },
-    { label: "Categories", href: `/${locale}/categories` },
-    { label: "Card", href: `/${locale}/card` },
+    { label: "Products", href: `/` },
+    { label: "Categories", href: `/categories` },
+    { label: "Card", href: `/card` },
   ];
 
   return (
