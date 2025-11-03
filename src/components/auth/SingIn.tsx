@@ -1,17 +1,26 @@
 "use client";
 import { signInAciton } from "@/lib/actions/auth";
+import { useTranslations } from "next-intl";
 import { redirect } from "next/navigation";
 import { useActionState, useEffect, useRef } from "react";
+import toast from "react-hot-toast";
 
 const SignInForm = () => {
   const [state, formAction, pending] = useActionState(signInAciton, {});
   const timeOut = useRef<NodeJS.Timeout>(null);
+  const t = useTranslations("auth");
+  const tTost = useTranslations("tost");
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (state?.ms === "create user is succesful") {
+        toast(tTost("succes.signinSucces"));
         timeOut.current = setTimeout(() => {
           redirect("/user");
         }, 1000);
+      } else if (state.ms === "server error") {
+        toast(tTost("error.signinError"));
+      } else if (state.ms === "incorrect") {
+        toast(tTost("error.incorrect"));
       }
     }
 
@@ -21,15 +30,13 @@ const SignInForm = () => {
   }, [state]);
   return (
     <form className="space-y-6" action={formAction}>
-      <div className="text-center text-green-500">{state.ms && <div>{state.ms}</div>}</div>
-
       {/* Email Field */}
       <div>
         <label
           htmlFor="email"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
-          Email Address
+          {t("email")}
         </label>
         <input
           id="email"
@@ -49,7 +56,7 @@ const SignInForm = () => {
           htmlFor="password"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
-          Password
+          {t("password")}
         </label>
         <input
           id="password"
@@ -91,10 +98,10 @@ const SignInForm = () => {
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               ></path>
             </svg>
-            Sign IN
+            {t("signin")}...
           </span>
         ) : (
-          "Sign In"
+          t("signin")
         )}
       </button>
     </form>

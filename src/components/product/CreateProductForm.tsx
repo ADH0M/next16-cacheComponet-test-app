@@ -15,8 +15,8 @@ export default function CreateProductForm({
     createProductClient,
     {}
   );
-  const t = useTranslations("CreateProductForm"); // ✅ namespace جديد
-  const tToast = useTranslations("tost"); // للـ toast
+  const t = useTranslations("CreateProductForm"); 
+  const tToast = useTranslations("tost"); 
 
   useEffect(() => {
     if (state.success && !state.message) {
@@ -135,7 +135,7 @@ export default function CreateProductForm({
           {t("mainImageUrl")}
         </label>
         <input
-          type="url"
+          type="text"
           id="mainImageUrl"
           name="mainImageUrl"
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"

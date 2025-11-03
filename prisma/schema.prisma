@@ -8,71 +8,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ====== Existing Models ======
-
-model Post {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  title    String
-  body     String
-  author   User      @relation(fields: [authorId], references: [id])
-  authorId String    @db.ObjectId
-  comments Comment[]
-}
-
-model User {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  email    String    @unique
-  name     String?
-  address  Address?
-  posts    Post[]
-  password String?
-  products Product[] @relation("OwnerProducts")
-}
-
-model Comment {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  comment String
-  post    Post   @relation(fields: [postId], references: [id])
-  postId  String @db.ObjectId
-}
-
 // Embedded document
 type Address {
-  street String
-  city   String
-  state  String
-  zip    String
-}
-
-// ====== NEW: Product & Related Models ======
-
-model Product {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  description String?
-  price       Float // in smallest currency unit (e.g., cents) or use Decimal
-  currency    String   @default("USD")
-  stock       Int      @default(0)
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // Relations
-  owner   User?   @relation("OwnerProducts", fields: [ownerId], references: [id])
-  ownerId String? @db.ObjectId
-
-  category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId String?   @db.ObjectId
-
-  images Image[]
-  tags   String[] // e.g., ["electronics", "gadget"]
-}
-
-model Category {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  name        String    @unique
-  description String?
-  products    Product[]
+  city  String
+  state String
 }
 
 // Embedded document for image metadata
@@ -80,4 +19,61 @@ type Image {
   url    String
   alt    String?
   isMain Boolean @default(false)
+}
+
+// Embedded document for translations
+type LocalizedString {
+  en String
+  ar String
+}
+
+// ================================
+// MAIN MODELS
+// ================================
+model User {
+  id       String     @id @default(auto()) @map("_id") @db.ObjectId
+  email    String     @unique
+  name     String?
+  address  Address?
+  password String?
+  ShopCard ShopCard[]
+  Favorite Favorite[]
+}
+
+model Product {
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
+  name        LocalizedString
+  description LocalizedString?
+  price       Float
+  stock       Int              @default(0)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?   @db.ObjectId
+
+  images Image[]
+  tags   String[]
+}
+
+model Category {
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
+  name        LocalizedString
+  description LocalizedString?
+  products    Product[]
+}
+
+model ShopCard {
+  id     String  @id @default(auto()) @map("_id") @db.ObjectId
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String? @db.ObjectId
+  items  Json // ممكن تخزن [{productId, quantity}]
+  total  Float   @default(0)
+}
+
+model Favorite {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  user     User?    @relation(fields: [userId], references: [id])
+  userId   String?  @db.ObjectId
+  products String[] // قائمة من productIds
 }

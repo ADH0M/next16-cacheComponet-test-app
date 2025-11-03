@@ -1,17 +1,24 @@
 "use client";
 import { registerAction } from "@/lib/actions/auth";
+import { useTranslations } from "next-intl";
 import { redirect } from "next/navigation";
 import { useActionState, useEffect, useRef } from "react";
+import toast from "react-hot-toast";
 
 const FormSection = () => {
   const [state, formAction, pending] = useActionState(registerAction, {});
   const timeOut = useRef<NodeJS.Timeout>(null);
+  const t = useTranslations("auth");
+  const tTost = useTranslations("tost");
   useEffect(() => {
     if (typeof window !== "undefined") {
-      if ( state?.ms) {
+      if (state?.ms === "succesful") {
+        toast(tTost("succes.createNewUser"));
         timeOut.current = setTimeout(() => {
           redirect("/user");
         }, 1000);
+      } else if (state.ms === "server error") {
+        toast(tTost("error.createNewUser"));
       }
     }
 
@@ -21,14 +28,13 @@ const FormSection = () => {
   }, [state]);
   return (
     <form className="space-y-6" action={formAction}>
-    
       {/* Name Field */}
       <div>
         <label
           htmlFor="name"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
-          Full Name
+          {t("name")}
         </label>
         <input
           id="name"
@@ -37,7 +43,9 @@ const FormSection = () => {
           className={`w-full px-4 py-3 rounded-lg border outline-none text-gray-800 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition`}
           placeholder="John Doe"
         />
-        {/* {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>} */}
+        {state.username && (
+          <p className="mt-1 text-sm text-red-600">{state.username}</p>
+        )}
       </div>
 
       {/* Email Field */}
@@ -46,7 +54,7 @@ const FormSection = () => {
           htmlFor="email"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
-          Email Address
+          {t("email")}
         </label>
         <input
           id="email"
@@ -55,7 +63,9 @@ const FormSection = () => {
           className={`w-full px-4 py-3 rounded-lg border text-gray-800 outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition`}
           placeholder="you@example.com"
         />
-        {/* {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>} */}
+        {state.email && (
+          <p className="mt-1 text-sm text-red-600">{state.email}</p>
+        )}
       </div>
 
       {/* Password Field */}
@@ -64,7 +74,7 @@ const FormSection = () => {
           htmlFor="password"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
-          Password
+          {t("password")}
         </label>
         <input
           id="password"
@@ -74,7 +84,9 @@ const FormSection = () => {
                     focus:border-transparent transition text-gray-800`}
           placeholder="••••••••"
         />
-        {/* {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>} */}
+        {state.password && (
+          <p className="mt-1 text-sm text-red-600">{state.password}</p>
+        )}
       </div>
 
       {/* Submit Button */}
@@ -104,10 +116,10 @@ const FormSection = () => {
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               ></path>
             </svg>
-            Creating Account...
+            {t("loading-createAcount")}
           </span>
         ) : (
-          "Create Account"
+          t("creatingAccount")
         )}
       </button>
     </form>

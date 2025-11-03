@@ -1,7 +1,13 @@
 import createMiddleware from "next-intl/middleware";
 import { NextRequest } from "next/server";
 
+const lagacyPrefixes = ['blog' , 'chat'];
 export default async function proxy(request: NextRequest) {
+
+ 
+
+  
+
   // Step 1: Use the incoming request (example)
   const defaultLocale =
     request.headers.get("x-your-custom-locale") === "ar"
@@ -16,6 +22,8 @@ export default async function proxy(request: NextRequest) {
 
   // Step 3: Alter the response (example)
   response.headers.set("x-your-custom-locale", defaultLocale);
+
+
 
   return response;
 }

@@ -4,28 +4,20 @@ import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import { getProductBySlug } from "@/lib/actions/product";
 
-type Props = {
-  params: {
-    slug: string;
-    locale: string;
-  };
-};
-
-export default async function ProductPage({ params }: Props) {
-  const { slug } = await params;
+export default async function ProductPage({
+  params,
+}: PageProps<"/[locale]/[slug]">) {
   const t = await getTranslations("ProductPage");
-
-  // Fetch product from database
+  const { slug } = await params;
   const product = await getProductBySlug(slug);
 
   if (!product) {
-    notFound(); // Show 404 if product doesn't exist
+    notFound();
   }
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Product Images */}
         <div>
           {product.images && product.images.length > 0 ? (
             <Image
@@ -34,6 +26,8 @@ export default async function ProductPage({ params }: Props) {
                 product.images[0].url
               }
               alt={product.images[0].alt || product.name}
+              width={400}
+              height={400}
               className="w-full h-96 object-cover rounded-lg shadow-md"
             />
           ) : (
