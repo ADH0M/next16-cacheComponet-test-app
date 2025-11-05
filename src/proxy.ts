@@ -1,11 +1,14 @@
 import createMiddleware from "next-intl/middleware";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-const lagacyPrefixes = ['blog' , 'chat'];
+
 export default async function proxy(request: NextRequest) {
 
- 
+  const pathnames = request.nextUrl;
 
+  if (pathnames.pathname.endsWith("user") ) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
   
 
   // Step 1: Use the incoming request (example)
@@ -22,8 +25,6 @@ export default async function proxy(request: NextRequest) {
 
   // Step 3: Alter the response (example)
   response.headers.set("x-your-custom-locale", defaultLocale);
-
-
 
   return response;
 }

@@ -17,7 +17,8 @@
     "succes": {
       "createProduct": "Product created successfully!",
       "createNewUser": "Your account has been created successfully! Welcome 🎉",
-      "signinSucces": "Signed in successfully. Welcome back!"
+      "signinSucces": "Signed in successfully. Welcome back!",
+      "product-favorite": "Product added to favorites "
     },
     "error": {
       "createProduct": "Failed to create product. Please try again.",
@@ -39,7 +40,17 @@
     "mainImageUrl": "Main Image URL",
     "tags": "Tags (comma-separated)",
     "tagsPlaceholder": "electronics, gadget, wireless",
-    "createProduct": "Create Product"
+    "createProduct": "Create Product",
+    "name-required": "Name is required",
+    "description-min-length": "Description must be at least 20 characters",
+    "description-max-length": "Description must not exceed 250 characters",
+    "price-required": "Price is required",
+    "is-positive": "Value must be a positive number",
+    "stock-required": "Stock quantity is required",
+    "stock-must-be-integer": "Stock must be a whole number",
+    "is-non-negative": "Stock cannot be negative",
+    "image-required": "Main image URL is required",
+    "tags-str": "Tags must be a string"
   },
 
   "loading": {
@@ -62,7 +73,8 @@
     "loading-createAcount": "Creating Account...",
     "creatingAccount": "Creating Account",
     "signin": "Sing in ",
-    "dontHaveAccount": "Don't have an account?"
+    "dontHaveAccount": "Don't have an account?",
+    "logout": "log-out"
   },
   "schemaValidation": {
     "emailRequired": "Email is required",
@@ -73,5 +85,43 @@
     "nameRequired": "Name is required",
     "nameTooShort": "Name must be at least 3 characters",
     "nameTooLong": "Name must not exceed 15 characters"
+  },
+  "error-user-page": {
+    "title": "Server Error",
+    "subtitle": "Something went wrong on our end.",
+    "description": "Our team has been notified. Please try again later or contact support if the problem persists.",
+    "backHome": "Back to Home",
+    "errorCode": "Error Code: 500"
+  },
+  "unauthorized-user-page": {
+    "title": "Access Denied",
+    "subtitle": "You are not authorized to view this page.",
+    "description": "The user profile you're trying to access does not exist or you don't have permission to view it.",
+    "backHome": "Go to Homepage",
+    "signIn": "Sign In",
+    "errorCode": "Error 403"
+  },
+  "user": {
+    "profile": "User Profile",
+    "id": "User ID",
+    "email": "Email",
+    "name": "Name",
+    "address": "Address",
+    "street": "Street",
+    "city": "City",
+    "postalCode": "Postal Code",
+    "country": "Country",
+    "password": "Password",
+    "notProvided": "Not provided",
+    "loading": "Loading user data..."
+  },
+  "favorite": {
+    "no-product-id": "Product ID is required",
+    "no-user-id": "User ID is required",
+    "productID-not-valid": "Invalid product ID",
+    "product-favorite": "Product is already in your favorites",
+    "remove-from-favorite-success": "Product removed from favorites",
+    "Server-error": "Something went wrong. Please try again later.",
+    "log-in": "You must be logged in to perform this action"
   }
 }

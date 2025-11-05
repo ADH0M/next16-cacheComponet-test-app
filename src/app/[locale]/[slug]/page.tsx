@@ -1,6 +1,6 @@
 // app/[locale]/products/[slug]/page.tsx
 import { notFound } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Image from "next/image";
 import { getProductBySlug } from "@/lib/actions/product";
 
@@ -8,7 +8,9 @@ export default async function ProductPage({
   params,
 }: PageProps<"/[locale]/[slug]">) {
   const t = await getTranslations("ProductPage");
+  const locale = (await getLocale()) as "en" | "ar";
   const { slug } = await params;
+
   const product = await getProductBySlug(slug);
 
   if (!product) {
@@ -25,7 +27,7 @@ export default async function ProductPage({
                 product.images.find((img) => img.isMain)?.url ||
                 product.images[0].url
               }
-              alt={product.images[0].alt || product.name}
+              alt={product.images[0].alt || product.name[locale]}
               width={400}
               height={400}
               className="w-full h-96 object-cover rounded-lg shadow-md"
@@ -40,14 +42,14 @@ export default async function ProductPage({
         {/* Product Info */}
         <div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            {product.name}
+            {product.name[locale]}
           </h1>
 
           <div className="flex items-center gap-4 mb-4">
             <span className="text-2xl font-bold text-green-600">
               {product.price.toLocaleString("en-US", {
                 style: "currency",
-                currency: product.currency || "USD",
+                currency: "USD",
               })}
             </span>
             {product.stock === 0 ? (
@@ -63,7 +65,7 @@ export default async function ProductPage({
 
           {product.description && (
             <p className="text-gray-700 mb-6 leading-relaxed">
-              {product.description}
+              {product.description[locale]}
             </p>
           )}
 
@@ -80,24 +82,6 @@ export default async function ProductPage({
                   </span>
                 ))}
               </div>
-            </div>
-          )}
-
-          {/* Category */}
-          {product.category && (
-            <div className="mb-6">
-              <h3 className="font-medium text-gray-900">{t("category")}:</h3>
-              <p className="text-gray-600">{product.category.name}</p>
-            </div>
-          )}
-
-          {/* Owner (if exists) */}
-          {product.owner && (
-            <div>
-              <h3 className="font-medium text-gray-900">{t("soldBy")}:</h3>
-              <p className="text-gray-600">
-                {product.owner.name || product.owner.email}
-              </p>
             </div>
           )}
         </div>

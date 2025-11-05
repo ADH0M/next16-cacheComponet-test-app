@@ -2,64 +2,115 @@
 import { useActionState, useEffect } from "react";
 import { createProductClient } from "@/lib/actions/product";
 import toast from "react-hot-toast";
-import { useTranslations } from "use-intl";
+import { useLocale, useTranslations } from "use-intl";
 
-type CategoryOption = { id: string; name: string };
+type CategoryOption = { id: string; name: { en: string; ar: string } };
 
 export default function CreateProductForm({
   categories,
 }: {
   categories: CategoryOption[];
 }) {
+  const t = useTranslations("CreateProductForm");
+  const tToast = useTranslations("tost");
+  const locale = useLocale() as "en" | "ar";
+
   const [state, formAction, isPending] = useActionState(
-    createProductClient,
+    createProductClient.bind(null, locale),
     {}
   );
-  const t = useTranslations("CreateProductForm"); 
-  const tToast = useTranslations("tost"); 
-
   useEffect(() => {
     if (state.success && !state.message) {
       toast.success(tToast("succes.createProduct"));
     }
   }, [state, tToast]);
 
+  console.log(state.fieldErrors);
+
   return (
     <form action={formAction} className="space-y-6">
       {/* Name */}
       <div>
         <label
-          htmlFor="name"
+          htmlFor="name-ar"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
-          {t("name")} *
+          {t("name")} * العربيه
         </label>
         <input
           type="text"
-          id="name"
-          name="name"
-          required
+          id="name-ar"
+          name="name-ar"
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
-        {state?.fieldErrors?.name && (
-          <p className="mt-1 text-sm text-red-600">{state?.fieldErrors.name}</p>
+        {state?.fieldErrors?.nameAR && (
+          <p className="mt-1 text-sm text-red-600">
+            {state.fieldErrors.nameAR}
+          </p>
+        )}
+      </div>
+
+      <div>
+        <label
+          htmlFor="name-en"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          {t("name")} * English
+        </label>
+        <input
+          type="text"
+          id="name-en"
+          name="name-en"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+        {state?.fieldErrors?.nameEn && (
+          <p className="mt-1 text-sm text-red-600">
+            {state?.fieldErrors.nameEn}
+          </p>
         )}
       </div>
 
       {/* Description */}
+
       <div>
         <label
-          htmlFor="description"
+          htmlFor="description-ar"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
           {t("description")}
         </label>
         <textarea
-          id="description"
-          name="description"
+          id="description-ar"
+          name="description-ar"
           rows={4}
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
+
+        {state?.fieldErrors?.descriptionEn && (
+          <p className="mt-1 text-sm text-red-600">
+            {state.fieldErrors.descriptionEn}
+          </p>
+        )}
+      </div>
+
+      <div>
+        <label
+          htmlFor="description-en"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          {t("description")} * English
+        </label>
+        <textarea
+          id="description-en"
+          name="description-en"
+          rows={4}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+        {state?.fieldErrors?.descriptionAr && (
+          <p className="mt-1 text-sm text-red-600">
+            {state.fieldErrors.descriptionAr}
+          </p>
+        )}
       </div>
 
       {/* Price */}
@@ -76,7 +127,6 @@ export default function CreateProductForm({
           name="price"
           step="0.01"
           min="0"
-          required
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
         {state?.fieldErrors?.price && (
@@ -120,7 +170,7 @@ export default function CreateProductForm({
           <option value="">{t("selectCategory")}</option>
           {categories.map((cat) => (
             <option key={cat.id} value={cat.id}>
-              {cat.name}
+              {cat.name[locale]}
             </option>
           ))}
         </select>

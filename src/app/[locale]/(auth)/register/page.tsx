@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function SignUpForm() {
   const t = useTranslations("auth");
   return (
-    <div className="main-page-bg flex justify-center   -mt-3">
+    <div className="main-page-bg flex justify-center  py-3">
       <div className="w-full max-w-md bg-white max-h-fit rounded-2xl shadow-xl overflow-hidden ">
         <div className="p-8">
           <div className="text-center mb-8">

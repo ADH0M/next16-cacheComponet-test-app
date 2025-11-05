@@ -1,21 +1,69 @@
 "use server";
 import prisma from "../db/prisma";
-import {  revalidateTag } from "next/cache";
+import { revalidateTag, updateTag } from "next/cache";
 import { productSchema } from "../schema";
+import { getTranslations } from "next-intl/server";
 
 export async function getProductBySlug(id: string) {
   return prisma.product.findUnique({
     where: { id },
-    include: {
-      category: true,
-      owner: {
-        select: {
-          name: true,
-          email: true,
-        },
-      },
-    },
   });
+}
+
+export async function addToFavorite(
+  productId: string,
+  userId: string
+): Promise<{ success: boolean; ms?: string }> {
+  const t = await getTranslations("favorite");
+  try {
+    if (!productId) return { success: false, ms: t("no-product-id") };
+    if (!userId) return { success: false, ms: t("no-user-id") };
+
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+    });
+
+    if (!product) {
+      return { success: false, ms: t("productID-not-valid") };
+    }
+
+    const favorite = await prisma.favorite.findUnique({
+      where: { userId },
+    });
+
+    let updatedProducts: string[];
+
+    if (favorite) {
+      if (favorite.products.includes(productId)) {
+        updatedProducts = favorite.products.filter(
+          (prodcut) => prodcut != productId
+        );
+        await prisma.favorite.update({
+          where: { id: favorite.id },
+          data: { products: updatedProducts },
+        });
+        updateTag("products");
+        return { success: false, ms: t("remove-from-favorite-success") };
+      }
+      updatedProducts = [...favorite.products, productId];
+      await prisma.favorite.update({
+        where: { userId },
+        data: { products: updatedProducts },
+      });
+    } else {
+      await prisma.favorite.create({
+        data: {
+          userId,
+          products: [productId],
+        },
+      });
+    }
+    updateTag("products");
+    return { success: true, ms: t("product-favorite") };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    return { success: false, ms: t("Server-error") };
+  }
 }
 
 export type CreateProductState = {
@@ -26,16 +74,21 @@ export type CreateProductState = {
 };
 
 export async function createProductClient(
-  initialState:CreateProductState,
+  locale: "en" | "ar",
+  initialState: CreateProductState,
   formData: FormData
 ): Promise<CreateProductState> {
-
-
+  if (!locale) {
+    return { success: false };
+  }
+  const t = await getTranslations("CreateProductForm");
   // ✅ 2. Parse & validate
-  const validatedFields = productSchema.safeParse({
-    name: formData.get("name"),
+  const validatedFields = productSchema(t).safeParse({
+    nameEn: formData.get("name-en"),
+    nameAR: formData.get("name-ar"),
     slug: formData.get("slug"),
-    description: formData.get("description"),
+    descriptionEn: formData.get("description-en"),
+    descriptionAr: formData.get("description-ar"),
     price: formData.get("price"),
     stock: formData.get("stock"),
     categoryId: formData.get("categoryId") || undefined,
@@ -76,20 +129,23 @@ export async function createProductClient(
     // ✅ 7. Create product
     const product = await prisma.product.create({
       data: {
-        name: data.name,
-        description: data.description,
+        name: {
+          en: data.nameEn,
+          ar: data.nameAR,
+        },
+        description: {
+          en: data.descriptionEn,
+          ar: data.descriptionAr,
+        },
         price: data.price,
         stock: data.stock,
-        currency: "USD",
-        published: true,
         images: imageList,
         tags: tagList,
-        categoryId, // now safe
-        // ownerId: ... (add if you have auth)
+        categoryId,
       },
     });
 
-    revalidateTag('products','max');
+    revalidateTag("products", "max");
 
     return { success: true };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

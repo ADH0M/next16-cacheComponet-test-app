@@ -27,7 +27,7 @@ body {
 
 @layer components {
   .main-page-bg {
-    @apply min-h-screen bg-linear-to-br from-indigo-500 via-purple-500 to-pink-500 p-4 ;
+    @apply min-h-screen bg-linear-to-br from-indigo-500 via-purple-500 to-pink-500;
   }
   
 }

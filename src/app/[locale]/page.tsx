@@ -6,21 +6,46 @@ import Image from "next/image";
 import { Suspense } from "react";
 import { getLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import Favorite from "@/components/product/Favorite";
+import { cookies } from "next/headers";
 
-// 💡 Fetch products with caching
 const fetchProducts = async () => {
-  "use cache";
+  "use cache: private";
   cacheTag("products");
-  return prisma.product.findMany({
-    take: 9,
-    include: {
-      category: true,
+  const cookie = await cookies();
+  const user = JSON.parse(cookie.get("user")?.value || "{}");
+  const products = await prisma.product.findMany({
+    select: {
+      id: true,
+      name: true,
+      price: true,
+      stock: true,
+      images: true,
+      tags: true,
     },
   });
+
+  if (!user.id && !user.name && !user.email) {
+    return products.map((p) => ({ ...p, isFavorite: false }));
+  }
+
+  const favorite = await prisma.favorite.findUnique({
+    where: { userId: user.id },
+    select: { products: true },
+  });
+
+  const favoriteProductIds = new Set(favorite?.products || []);
+
+  return products.map((product) => ({
+    ...product,
+    isFavorite: favoriteProductIds.has(product.id),
+  }));
 };
 
 const ProductCard = async ({ product }: { product: any }) => {
   const locale = await getLocale();
+  const cookie = await cookies();
+  const user = JSON.parse(cookie.get("user")?.value || "{}");
 
   // Get main image or fallback
   const mainImage =
@@ -29,37 +54,30 @@ const ProductCard = async ({ product }: { product: any }) => {
     "/placeholder.webp";
 
   return (
-    <div className="group bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-200 overflow-hidden flex flex-col h-full">
-      <Link
-        href={`/${product.id}`}
-        className="block"
-        prefetch={false}
-      >
-        <div className="aspect-square w-full bg-gray-100 relative">
+    <div className="group relative bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-200 overflow-hidden flex flex-col h-full">
+      <Favorite user={user} productId={product.id} isFavorite={product.isFavorite}/>
+      <Link href={`/${product.id}`} className="block" prefetch={false}>
+        <div className="aspect-square w-full bg-gray-100 relative z-10">
           <Image
             src={mainImage}
             alt={product.name}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            placeholder="blur"
+            blurDataURL="..."
           />
         </div>
         <div className="p-4 flex flex-col grow">
           <h3 className="font-semibold text-gray-900 line-clamp-1 mb-1">
-            {product.name}
+            {product.name[locale]}
           </h3>
-
-          {product.category && (
-            <p className="text-sm text-gray-500 mb-2">
-              {product.category.name}
-            </p>
-          )}
 
           <div className="mt-auto">
             <p className="text-lg font-bold text-gray-900">
               {product.price.toLocaleString("en-US", {
                 style: "currency",
-                currency: product.currency || "USD",
+                currency: "USD",
               })}
             </p>
 
@@ -92,6 +110,7 @@ const Products = async () => {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-6">
+      
       {products.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}
@@ -104,7 +123,7 @@ export default async function HomePage() {
   const t = await getTranslations("HomePage");
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 overflow-hidden">
       <h1 className="text-2xl font-bold text-gray-900 mb-8 text-center">
         {t("title")}
       </h1>
