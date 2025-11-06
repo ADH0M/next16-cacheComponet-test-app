@@ -133,27 +133,7 @@ This ensures **optimal performance** with only **2 database queries**, regardles
 
 ---
 
-## 🌍 Bilingual Experience
-
-- Language is detected from browser or user preference
-- UI automatically switches direction (`dir="rtl"` for Arabic)
-- All text loaded from `/messages/ar.json` or `/messages/en.json`
-- Easy to extend to additional languages in the future
-
----
-
-## 📈 Future Improvements
-
-- Replace `ShopCard.items: Json` with a proper `CartItem` model  
-- Add full **authentication** (NextAuth.js or custom)  
-- Implement real-time cart sync  
-- Add product **search & filtering**  
-- Integrate payment gateway (e.g., Stripe)  
-- Admin dashboard for managing inventory
-
----
-
-## 🙌 Why This Demo?
+## Live :https://next16-cache-componet-test-b3v9w98iw-adhamsaids-projects.vercel.app/en
 
 This project demonstrates how to build a **production-ready, performant, and multilingual** e-commerce frontend using the **latest Next.js features**, while maintaining:
 
