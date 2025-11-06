@@ -124,7 +124,7 @@ export default async function HomePage() {
 
   return (
     <div className="container mx-auto px-4 py-8 overflow-hidden">
-      <h1 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+      <h1 className="text-2xl font-bold  mb-8 text-center text-gray-50 s  ">
         {t("title")}
       </h1>
 

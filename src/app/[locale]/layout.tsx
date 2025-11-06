@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { UserLoading } from "@/components/ui/UserProfile";
+import Footer from "@/components/Footer/Footer";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -34,6 +35,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html dir={direction} lang={locale}>
       <body>
+        <main className="min-h-fit m"></main>
         <Suspense
           fallback={
             <div className="relative main-page-bg" dir="ltr">
@@ -76,7 +78,10 @@ export default async function LocaleLayout({ children, params }: Props) {
         >
           <NextIntlClientProvider>
             <Navbar locale={locale} />
-            <div className="main-page-bg">{children}</div>
+            <div className="main-page-bg">
+              {children}
+              <Footer />
+            </div>
             <Toaster />
           </NextIntlClientProvider>
         </Suspense>
